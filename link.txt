@@ -1,0 +1,2 @@
+GitHub Repository: https://github.com/reevald/a433-microservices
+GitHub Packages: ghcr.io/reevald/item-app:v1

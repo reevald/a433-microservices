@@ -1,0 +1,27 @@
+# Menggunakan Docker compose versi lebih dari 2
+version: "3"
+
+# Terdiri dari dua buah service: item-app dan item-db
+services:
+  item-app:
+    # Menggunakan image item-app dari GitHub Packages
+    image: ghcr.io/reevald/item-app:v1
+    # Melakukan port mapping agar dapat diakses dari port:80 di host
+    ports:
+      - 80:8080
+    # Memastikan item-app hanya berjalan setelah item-db diluncurkan
+    depends_on:
+      - item-db
+    # Menerapkan restart policy agar selalu restart ketika terhenti
+    restart: always
+  item-db:
+    # Menggunakan image mongo:3 dari Docker Hub
+    image: mongo:3
+    # Memakai volume bernama app-db dengan target /data/db di container
+    volumes:
+      - app-db:/data/db
+    # Menerapkan restart policy agar selalu restart ketika terhenti
+    restart: always
+# Memiliki satu buah volume bernama app-db
+volumes:
+  app-db:
