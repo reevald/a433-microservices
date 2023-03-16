@@ -1,0 +1,40 @@
+# Ref: 
+# https://emmer.dev/blog/linting-dockerfiles-with-hadolint/
+# https://circleci.com/developer/orbs/orb/circleci/docker
+version: 2.1
+orbs:
+  docker: circleci/docker@x.y.z
+jobs:
+  lint-dockerfile:
+    steps:
+      - checkout
+      - setup_remote_docker
+      - docker/hadolint:
+          dockerfiles: Dockerfile
+  test-app:
+    steps:
+      - checkout # check out source code to working directory
+      - run:
+          name: Run test app
+          command: go test -v -short --count=1 $(go list ./...)
+  build-app-karsajobs:
+    steps:
+      - checkout
+      - run:
+          name: Run build image
+          command: |
+            docker build -f Dockerfile -t ghcr.io/reevald/karsajobs:latest .
+      - run:
+          name: Run - login github packages
+          command: |
+            echo $CR_PAT_GH | docker login ghcr.io -u reevald --password-stdin
+      - run:
+          name: Run push image
+          command: |
+            docker push ghcr.io/reevald/karsajobs:latest
+workflows:
+  lint-test-build:
+    jobs:
+      - lint-dockerfile
+      - test-app
+      - build-app-karsajobs
