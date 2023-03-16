@@ -1,0 +1,4 @@
+Github Repository: https://github.com/reevald/a433-microservices
+Github Packages: 
+- ghcr.io/reevald/karsajobs:latest
+- ghcr.io/reevald/karsajobs-ui:latest

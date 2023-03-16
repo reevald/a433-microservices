@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-tier
+  labels:
+    app: karsajobs
+    tier: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        app: karsajobs
+        tier: frontend
+    spec:
+      containers:
+      - name: karsajobs-frontend
+        image: ghcr.io/reevald/karsajobs-ui:latest
+        ports:
+          - containerPort: 80
+        env:
+          - name: VUE_APP_BACKEND
+            # Perlu dicek berkala sebelum dijalankan
+            # http://<Node_IP>:<Node_Port>
+            # Cek dengan: minikube service backend-tier -n statefulset-ns --url
+            value: http://127.0.0.1:53044
